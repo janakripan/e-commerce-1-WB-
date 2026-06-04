@@ -37,7 +37,7 @@ const reviews = [
   },
 ]
 
-function ReviewCard({ review, isActive }) {
+function ReviewCard({ review }) {
   return (
     <motion.div
       layout

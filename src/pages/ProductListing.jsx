@@ -33,23 +33,28 @@ export default function ProductListing() {
   const [applied, setApplied] = useState(() => getInitialFilters(category))
   const [sort, setSort] = useState('popular')
   const [page, setPage] = useState(0)
-  const [sidebarOpen, setSidebarOpen] = useState(false)
   const [loading, setLoading] = useState(false)
 
-  useEffect(() => {
+  // Sync category changes during render (official React hook pattern)
+  const [prevCategory, setPrevCategory] = useState(category)
+  if (category !== prevCategory) {
+    setPrevCategory(category)
     const init = getInitialFilters(category)
     setFilters(init)
     setApplied(init)
     setPage(0)
-  }, [category])
-
-  useEffect(() => {
     setLoading(true)
-    const timer = setTimeout(() => {
-      setLoading(false)
-    }, 450)
-    return () => clearTimeout(timer)
-  }, [applied, sort, page])
+  }
+
+  // Handle loading timer
+  useEffect(() => {
+    if (loading) {
+      const timer = setTimeout(() => {
+        setLoading(false)
+      }, 450)
+      return () => clearTimeout(timer)
+    }
+  }, [loading])
 
   const filtered = useMemo(() => {
     let list = products.filter(p => {
@@ -72,9 +77,14 @@ export default function ProductListing() {
   const totalPages = Math.ceil(filtered.length / PER_PAGE)
   const visible = filtered.slice(page * PER_PAGE, (page + 1) * PER_PAGE)
 
-  const applyFilters = () => { setApplied(filters); setPage(0) }
+  const applyFilters = () => {
+    setLoading(true)
+    setApplied(filters)
+    setPage(0)
+  }
 
   const handlePageClick = (data) => {
+    setLoading(true)
     setPage(data.selected)
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
@@ -104,10 +114,10 @@ export default function ProductListing() {
               <p className="text-black/50 text-sm mt-0.5">Showing {visible.length} of {filtered.length} Products</p>
             </div>
             <div className="flex items-center gap-3">
-              <button onClick={() => setSidebarOpen(true)} className="lg:hidden border border-[#e5e5e5] rounded-full px-4 py-2 flex items-center gap-2 text-sm">
+              <button className="lg:hidden border border-[#e5e5e5] rounded-full px-4 py-2 flex items-center gap-2 text-sm">
                 <FiSliders size={15} /> Filters
               </button>
-              <select value={sort} onChange={e => { setSort(e.target.value); setPage(0) }}
+              <select value={sort} onChange={e => { setLoading(true); setSort(e.target.value); setPage(0) }}
                 className="border border-[#e5e5e5] rounded-full px-4 py-2.5 text-sm outline-none bg-white cursor-pointer">
                 <option value="popular">Most Popular</option>
                 <option value="newest">Newest First</option>

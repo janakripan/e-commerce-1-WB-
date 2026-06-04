@@ -3,12 +3,14 @@ import { motion } from 'framer-motion'
 import { FiArrowRight, FiTag } from 'react-icons/fi'
 import { useCart } from '../../context/CartContext'
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../../context/AuthContext'
 
 const DISCOUNT_PCT = 0.2
 const DELIVERY = 15
 
 export default function OrderSummary() {
   const { subtotal } = useCart()
+  const { user } = useAuth()
   const [promo, setPromo] = useState('')
   const [promoApplied, setPromoApplied] = useState(false)
   const navigate = useNavigate()
@@ -66,7 +68,7 @@ export default function OrderSummary() {
       {/* Checkout button */}
       <motion.button
         whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}
-        onClick={() => navigate('/')}
+        onClick={() => navigate(user ? '/checkout' : '/login?redirect=checkout')}
         className="w-full mt-5 bg-black text-white rounded-full py-4 font-medium flex items-center justify-center gap-2 hover:bg-black/85 transition-colors"
       >
         Go to Checkout <FiArrowRight size={18} />

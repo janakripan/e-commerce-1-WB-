@@ -36,6 +36,7 @@ export function WishlistProvider({ children }) {
   )
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useWishlist() {
   const ctx = useContext(WishlistContext)
   if (!ctx) throw new Error('useWishlist must be used within WishlistProvider')

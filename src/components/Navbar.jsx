@@ -5,6 +5,7 @@ import { FiSearch, FiShoppingCart, FiUser, FiMenu, FiX, FiChevronDown } from 're
 import { AiOutlineHeart } from 'react-icons/ai'
 import { useCart } from '../context/CartContext'
 import { useWishlist } from '../context/WishlistContext'
+import { useAuth } from '../context/AuthContext'
 
 function ShopDropdown({ onClose }) {
   const links = [
@@ -52,6 +53,8 @@ export default function Navbar() {
   const navigate = useNavigate()
   const { totalItems } = useCart()
   const { count: wishCount } = useWishlist()
+  const { user, logout } = useAuth()
+  const [userMenuOpen, setUserMenuOpen] = useState(false)
 
   const handleSearch = (e) => {
     e.preventDefault()
@@ -141,7 +144,66 @@ export default function Navbar() {
             )}
           </Link>
 
-          <button className="text-black hover:opacity-70 transition-opacity" aria-label="Account"><FiUser size={22} /></button>
+          <div className="relative" onMouseLeave={() => setUserMenuOpen(false)}>
+            {user ? (
+              <>
+                <button
+                  onClick={() => setUserMenuOpen(!userMenuOpen)}
+                  onMouseEnter={() => setUserMenuOpen(true)}
+                  className="text-black hover:opacity-70 transition-opacity flex items-center gap-1.5 focus:outline-none cursor-pointer"
+                  aria-label="Account Menu"
+                >
+                  <FiUser size={22} />
+                  <span className="hidden sm:inline text-xs font-semibold text-black/70">Hi, {user.name.split(' ')[0]}</span>
+                </button>
+                <AnimatePresence>
+                  {userMenuOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 8, scale: 0.95 }}
+                      className="absolute right-0 top-full pt-1.5 w-48 z-50"
+                    >
+                      <div className="bg-white rounded-xl shadow-xl border border-[#e5e5e5] py-2 overflow-hidden">
+                        <div className="px-4 py-2 border-b border-[#f0f0f0]">
+                          <p className="text-[10px] text-black/40 font-bold uppercase tracking-wider">Signed in as</p>
+                          <p className="text-sm font-bold text-black truncate">{user.name}</p>
+                        </div>
+                        <Link
+                          to="/account"
+                          onClick={() => setUserMenuOpen(false)}
+                          className="flex items-center gap-2 px-4 py-2.5 text-sm text-black/70 hover:text-black hover:bg-[#F5F5F5] transition-all font-medium"
+                        >
+                          My Profile
+                        </Link>
+                        <Link
+                          to="/account"
+                          onClick={() => setUserMenuOpen(false)}
+                          className="flex items-center gap-2 px-4 py-2.5 text-sm text-black/70 hover:text-black hover:bg-[#F5F5F5] transition-all font-medium border-b border-[#f0f0f0]"
+                        >
+                          Order History
+                        </Link>
+                        <button
+                          onClick={() => {
+                            setUserMenuOpen(false);
+                            logout();
+                            navigate('/');
+                          }}
+                          className="w-full text-left flex items-center gap-2 px-4 py-2.5 text-sm text-red-500 hover:bg-red-50 transition-all font-medium cursor-pointer"
+                        >
+                          Log Out
+                        </button>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </>
+            ) : (
+              <Link to="/login" className="text-black hover:opacity-70 transition-opacity" aria-label="Account">
+                <FiUser size={22} />
+              </Link>
+            )}
+          </div>
         </div>
       </nav>
 
