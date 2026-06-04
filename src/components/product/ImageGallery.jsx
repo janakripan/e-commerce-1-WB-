@@ -5,16 +5,16 @@ export default function ImageGallery({ images = [], name = '' }) {
   const [active, setActive] = useState(0)
 
   return (
-    <div className="flex gap-4">
+    <div className="flex flex-col-reverse md:flex-row gap-4">
       {/* Thumbnails */}
-      <div className="flex flex-col gap-3 w-[100px] shrink-0">
+      <div className="flex flex-row md:flex-col gap-3 w-full md:w-[120px] shrink-0">
         {images.map((img, i) => (
           <motion.button
             key={i}
             onClick={() => setActive(i)}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className={`rounded-xl overflow-hidden aspect-square border-2 transition-colors ${
+            className={`rounded-xl overflow-hidden aspect-square border-2 transition-colors flex-1 md:flex-initial ${
               active === i ? 'border-black' : 'border-transparent'
             }`}
           >

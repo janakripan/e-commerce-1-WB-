@@ -41,7 +41,7 @@ export default function ProductDetail() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
-        className="grid lg:grid-cols-2 gap-8 lg:gap-14"
+        className="grid md:grid-cols-2 gap-8 lg:gap-14"
       >
         <ImageGallery images={product.images} name={product.name} />
         <ProductInfo product={product} />

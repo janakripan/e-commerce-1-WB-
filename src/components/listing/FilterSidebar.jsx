@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion'
-import { FiFilter, FiChevronDown, FiChevronUp } from 'react-icons/fi'
+import { FiFilter, FiChevronDown, FiChevronUp, FiX } from 'react-icons/fi'
 import { useState } from 'react'
 import { allCategories, allSizes, allStyles, filterColors, filterColorMap } from '../../data/products'
 
@@ -18,7 +18,7 @@ function Section({ title, children }) {
   )
 }
 
-export default function FilterSidebar({ filters, onChange, onApply }) {
+export default function FilterSidebar({ filters, onChange, onApply, onClose }) {
   const toggle = (key, val) => {
     const cur = filters[key] || []
     onChange({ ...filters, [key]: cur.includes(val) ? cur.filter(v => v !== val) : [...cur, val] })
@@ -28,7 +28,13 @@ export default function FilterSidebar({ filters, onChange, onApply }) {
     <div className="bg-white border border-[#e5e5e5] rounded-2xl p-6 sticky top-24">
       <div className="flex items-center justify-between mb-5">
         <h3 className="font-bold text-black text-base">Filters</h3>
-        <FiFilter size={18} className="text-black/50" />
+        {onClose ? (
+          <button onClick={onClose} className="p-1.5 hover:bg-[#F5F5F5] rounded-full transition-colors cursor-pointer" aria-label="Close filters">
+            <FiX size={18} className="text-black" />
+          </button>
+        ) : (
+          <FiFilter size={18} className="text-black/50" />
+        )}
       </div>
 
       <Section title="Category">

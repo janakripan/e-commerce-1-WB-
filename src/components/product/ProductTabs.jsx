@@ -46,12 +46,12 @@ export default function ProductTabs({ product }) {
   return (
     <div className="mt-12">
       {/* Tab headers */}
-      <div className="flex border-b border-[#e5e5e5]">
+      <div className="flex border-b border-[#e5e5e5] w-full">
         {tabs.map((tab, i) => (
           <button key={tab} onClick={() => setActive(i)}
-            className={`relative px-6 py-4 text-sm font-medium transition-colors ${active === i ? 'text-black' : 'text-black/40 hover:text-black/70'}`}>
+            className={`relative flex-1 text-center py-4 text-xs sm:text-sm font-medium transition-colors cursor-pointer ${active === i ? 'text-black font-semibold' : 'text-black/40 hover:text-black/70'}`}>
             {tab}
-            {i === 1 && <span className="ml-1.5 text-xs text-black/40">({reviews.length})</span>}
+            {i === 1 && <span className="ml-1 text-[10px] sm:text-xs text-black/40">({reviews.length})</span>}
             {active === i && (
               <motion.div layoutId="tab-underline" className="absolute bottom-0 left-0 right-0 h-0.5 bg-black rounded-full" />
             )}
@@ -64,15 +64,15 @@ export default function ProductTabs({ product }) {
         {active === 0 && <ProductDetails product={product} />}
         {active === 1 && (
           <div className="py-8">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-xl font-bold">All Reviews <span className="text-black/40 font-normal text-base">({reviews.length})</span></h3>
-              <div className="flex gap-3">
-                <select className="border border-[#e5e5e5] rounded-full px-4 py-2 text-sm outline-none">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
+              <h3 className="text-lg sm:text-xl font-bold">All Reviews <span className="text-black/40 font-normal text-sm sm:text-base">({reviews.length})</span></h3>
+              <div className="flex gap-2 sm:gap-3 w-full sm:w-auto">
+                <select className="border border-[#e5e5e5] rounded-full px-3 py-2 text-xs sm:text-sm outline-none bg-white cursor-pointer flex-1 sm:flex-initial">
                   <option>Latest</option>
                   <option>Highest Rated</option>
                   <option>Lowest Rated</option>
                 </select>
-                <button className="bg-black text-white rounded-full px-5 py-2 text-sm flex items-center gap-1.5">
+                <button className="bg-black text-white rounded-full px-4 py-2 text-xs sm:text-sm flex items-center justify-center gap-1.5 cursor-pointer hover:bg-black/85 transition-colors flex-1 sm:flex-initial">
                   <FiEdit3 size={13} /> Write a Review
                 </button>
               </div>

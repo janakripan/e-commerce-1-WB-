@@ -100,19 +100,19 @@ export default function ProductInfo({ product }) {
       <div className="border-b border-[#e5e5e5]" />
 
       {/* Qty + Add to cart */}
-      <div className="flex gap-3 items-center">
-        <div className="flex items-center gap-4 bg-[#F0F0F0] rounded-full px-5 py-3">
-          <button onClick={() => setQty(q => Math.max(1, q - 1))} className="text-black/60 hover:text-black"><FiMinus /></button>
-          <span className="text-black font-medium w-5 text-center">{qty}</span>
-          <button onClick={() => setQty(q => q + 1)} className="text-black/60 hover:text-black"><FiPlus /></button>
+      <div className="flex gap-2 sm:gap-3 items-center w-full">
+        <div className="flex items-center gap-3 sm:gap-4 bg-[#F0F0F0] rounded-full px-4 py-3 sm:px-5 shrink-0 select-none">
+          <button onClick={() => setQty(q => Math.max(1, q - 1))} className="text-black/60 hover:text-black cursor-pointer"><FiMinus /></button>
+          <span className="text-black font-medium w-5 text-center text-sm sm:text-base">{qty}</span>
+          <button onClick={() => setQty(q => q + 1)} className="text-black/60 hover:text-black cursor-pointer"><FiPlus /></button>
         </div>
         <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }} onClick={handleAddToCart}
-          className="flex-1 bg-black text-white rounded-full py-3.5 font-medium flex items-center justify-center gap-2 hover:bg-black/85 transition-colors">
+          className="flex-1 bg-black text-white rounded-full py-3.5 font-medium flex items-center justify-center gap-2 hover:bg-black/85 transition-colors text-xs sm:text-sm md:text-base whitespace-nowrap cursor-pointer">
           <FiShoppingCart size={18} /> Add to Cart
         </motion.button>
         <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}
           onClick={() => toggleItem(product)}
-          className="w-12 h-12 rounded-full border border-[#e5e5e5] flex items-center justify-center text-xl">
+          className="w-12 h-12 rounded-full border border-[#e5e5e5] flex items-center justify-center text-xl shrink-0 cursor-pointer">
           {wishlisted ? <AiFillHeart className="text-red-500" /> : <AiOutlineHeart className="text-black" />}
         </motion.button>
       </div>

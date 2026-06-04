@@ -2,12 +2,9 @@ import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import ProductCard from './ProductCard'
 
-const newArrivals = [
-  { id: 11, name: 'T-shirt with Tape Details', price: 120, rating: 4.5, image: '/images/p1.png', isNew: true },
-  { id: 4,  name: 'Skinny Fit Jeans', price: 240, originalPrice: 260, discount: 20, rating: 3.5, image: '/images/p2.png' },
-  { id: 5,  name: 'Checkered Shirt', price: 180, rating: 4.5, image: '/images/p3.png' },
-  { id: 6,  name: 'Sleeve Striped T-shirt', price: 130, originalPrice: 160, discount: 30, rating: 4.5, image: '/images/p4.png' },
-]
+import { products } from '../data/products'
+
+const newArrivals = products.filter(p => [11, 4, 5, 6].includes(p.id))
 
 export default function NewArrivals() {
   return (

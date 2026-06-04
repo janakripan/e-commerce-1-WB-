@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { motion } from 'framer-motion'
-import { FiSliders, FiArrowLeft, FiArrowRight } from 'react-icons/fi'
+import { motion, AnimatePresence } from 'framer-motion'
+import { FiSliders, FiArrowLeft, FiArrowRight, FiX } from 'react-icons/fi'
 import ReactPaginate from 'react-paginate'
 import { products } from '../data/products'
 import FilterSidebar from '../components/listing/FilterSidebar'
@@ -34,6 +34,7 @@ export default function ProductListing() {
   const [sort, setSort] = useState('popular')
   const [page, setPage] = useState(0)
   const [loading, setLoading] = useState(false)
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
 
   // Sync category changes during render (official React hook pattern)
   const [prevCategory, setPrevCategory] = useState(category)
@@ -57,12 +58,34 @@ export default function ProductListing() {
   }, [loading])
 
   const filtered = useMemo(() => {
+    const filterToProductColorsMap = {
+      green: ['olive', 'forestGreen'],
+      red: ['red'],
+      yellow: ['yellow'],
+      orange: ['orange'],
+      lightBlue: ['lightBlue'],
+      blue: ['blue', 'navy'],
+      purple: ['purple'],
+      pink: ['pink'],
+      white: ['white', 'beige'],
+      black: ['black', 'gray', 'khaki']
+    }
+
     let list = products.filter(p => {
       if (category === 'mens' && p.gender !== 'men' && p.gender !== 'unisex') return false
       if (category === 'womens' && p.gender !== 'women' && p.gender !== 'unisex') return false
       
       if (applied.categories.length && !applied.categories.includes(p.category)) return false
       if (p.price > applied.maxPrice) return false
+      if (applied.colors.length) {
+        const matchesColor = p.colors.some(pc => 
+          applied.colors.some(fc => {
+            const mapped = filterToProductColorsMap[fc] || [fc]
+            return mapped.includes(pc)
+          })
+        )
+        if (!matchesColor) return false
+      }
       if (applied.sizes.length && !applied.sizes.some(s => p.sizes.includes(s))) return false
       if (applied.styles.length && !applied.styles.includes(p.style)) return false
       return true
@@ -114,7 +137,8 @@ export default function ProductListing() {
               <p className="text-black/50 text-sm mt-0.5">Showing {visible.length} of {filtered.length} Products</p>
             </div>
             <div className="flex items-center gap-3">
-              <button className="lg:hidden border border-[#e5e5e5] rounded-full px-4 py-2 flex items-center gap-2 text-sm">
+              <button onClick={() => setMobileFiltersOpen(true)}
+                className="lg:hidden border border-[#e5e5e5] rounded-full px-4 py-2 flex items-center gap-2 text-sm cursor-pointer hover:bg-[#F5F5F5] transition-all">
                 <FiSliders size={15} /> Filters
               </button>
               <select value={sort} onChange={e => { setLoading(true); setSort(e.target.value); setPage(0) }}
@@ -189,6 +213,39 @@ export default function ProductListing() {
           </div>
         </div>
       </div>
+      {/* Mobile Drawer */}
+      <AnimatePresence>
+        {mobileFiltersOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.4 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setMobileFiltersOpen(false)}
+              className="fixed inset-0 bg-black z-50 lg:hidden"
+            />
+            {/* Drawer */}
+            <motion.div
+              initial={{ x: '-100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '-100%' }}
+              transition={{ type: 'tween', duration: 0.3 }}
+              className="fixed inset-y-0 left-0 w-[300px] max-w-[85vw] bg-white z-50 shadow-2xl p-4 overflow-y-auto lg:hidden"
+            >
+              <FilterSidebar
+                filters={filters}
+                onChange={setFilters}
+                onApply={() => {
+                  applyFilters()
+                  setMobileFiltersOpen(false)
+                }}
+                onClose={() => setMobileFiltersOpen(false)}
+              />
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </div>
   )
 }

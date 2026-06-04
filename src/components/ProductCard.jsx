@@ -69,7 +69,7 @@ export default function ProductCard({ product, index = 0 }) {
         <motion.button
           whileHover={{ scale: 1.15 }} whileTap={{ scale: 0.85 }}
           onClick={handleWishlist}
-          className="absolute top-3 right-3 w-8 h-8 bg-white rounded-full shadow flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+          className="absolute top-3 right-3 w-8 h-8 bg-white rounded-full shadow flex items-center justify-center opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity cursor-pointer"
         >
           {wishlisted ? <AiFillHeart className="text-red-500 text-base" /> : <AiOutlineHeart className="text-black text-base" />}
         </motion.button>
